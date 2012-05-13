@@ -2,8 +2,9 @@
 (function() {
 
   describe("Backbone.BindTo", function() {
-    var TestModel, TestView, initView;
+    var TestCollection, TestModel, TestView, initView;
     TestModel = Backbone.Model;
+    TestCollection = Backbone.Collection;
     TestView = Backbone.BindTo.View.extend({
       initialize: function() {
         var _this = this;
@@ -24,7 +25,7 @@
       View = TestView.extend(properties);
       return new View(opts);
     };
-    return describe("#bindToModel", function() {
+    describe("#bindToModel", function() {
       it("can bind to several model events to view actions", function() {
         var model, view;
         model = new TestModel;
@@ -110,6 +111,95 @@
         });
         view.remove();
         model.trigger('event');
+        return view.eventTracked.should.not.be["true"];
+      });
+    });
+    return describe("#bindToCollection", function() {
+      it("can bind to several collection events to view actions", function() {
+        var collection, view;
+        collection = new TestCollection;
+        view = initView({
+          collection: collection
+        }, {
+          bindToCollection: {
+            'reset': 'resetItems',
+            'add': 'addItem'
+          },
+          resetItems: function() {
+            return this.el.innerHTML = _.range(this.collection.length).map(function() {
+              return '<li></li>';
+            }).join('');
+          },
+          addItem: function() {
+            return this.$el.append('<li></li>');
+          }
+        });
+        collection.reset(['item-1', 'item-2']);
+        collection.add('item-3');
+        return view.$el.find('li').length.should.be.equal(3);
+      });
+      it("doesn't throw an error if bindToCollection is not specified", function() {
+        var collection, view;
+        collection = new TestCollection;
+        view = initView({
+          collection: collection
+        });
+        return view.remove();
+      });
+      it("doesn't throw an error if there isn't a collection", function() {
+        var view;
+        view = initView({
+          collection: null
+        }, {
+          bindToCollection: {
+            'event': 'action'
+          }
+        });
+        return view.remove();
+      });
+      it("throws an error if view action doesn't exists", function() {
+        return (function() {
+          var collection, view;
+          collection = new TestCollection;
+          return view = initView({
+            collection: collection
+          }, {
+            bindToCollection: {
+              'event': 'invalid$Action'
+            }
+          });
+        }).should["throw"]('Method invalid$Action does not exist');
+      });
+      it("throws an error if view action is not an function", function() {
+        return (function() {
+          var collection, view;
+          collection = new TestCollection;
+          return view = initView({
+            collection: collection
+          }, {
+            action: 'String',
+            bindToCollection: {
+              'event': 'action'
+            }
+          });
+        }).should["throw"]('action is not a function');
+      });
+      return it("unbinds from all collection events when the view is removed removed", function() {
+        var collection, view;
+        collection = new TestCollection;
+        view = initView({
+          collection: collection
+        }, {
+          bindToCollection: {
+            'event': 'trackEvent'
+          },
+          eventTracked: false,
+          trackEvent: function() {
+            return this.eventTracked = true;
+          }
+        });
+        view.remove();
+        collection.trigger('event');
         return view.eventTracked.should.not.be["true"];
       });
     });
