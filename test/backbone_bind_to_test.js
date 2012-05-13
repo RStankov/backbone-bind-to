@@ -2,8 +2,128 @@
 (function() {
 
   describe("Backbone.BindTo", function() {
-    return it("is defined", function() {
-      return Backbone.BindTo.should.not.be["null"];
+    var TestModel, TestView, initView, sandbox;
+    sandbox = {
+      use: function(dom) {
+        this.dom = $(dom);
+        return $('body').append(dom);
+      },
+      clear: function() {
+        if (this.dom) {
+          this.dom.remove();
+        }
+        return this.dom = null;
+      }
+    };
+    afterEach(function() {
+      return sandbox.clear();
+    });
+    TestModel = Backbone.Model;
+    TestView = Backbone.BindTo.View.extend({
+      initialize: function() {
+        this.el.innerHTML = this.template;
+        return sandbox.use(this.el);
+      }
+    });
+    initView = function(opts, properties) {
+      var View;
+      if (opts == null) {
+        opts = {};
+      }
+      if (properties == null) {
+        properties = {};
+      }
+      View = TestView.extend(properties);
+      return new View(opts);
+    };
+    return describe("#bindToModel", function() {
+      it("can bind to several model events to view actions", function() {
+        var model, view;
+        model = new TestModel;
+        view = initView({
+          model: model
+        }, {
+          template: '<div class="name"></div><div class="email"></div>',
+          bindToModel: {
+            'change:name': 'renderName',
+            'change:email': 'renderEmail'
+          },
+          renderName: function() {
+            return this.$el.find('.name').html(this.model.get('name'));
+          },
+          renderEmail: function() {
+            return this.$el.find('.email').html(this.model.get('email'));
+          }
+        });
+        model.set('name', 'UserName');
+        view.$('.name').html().should.be.equal('UserName');
+        model.set('email', 'UserEmail');
+        return view.$('.email').html().should.be.equal('UserEmail');
+      });
+      it("doesn't throw an error if bindToModel is not specified", function() {
+        var model, view;
+        model = new TestModel;
+        view = initView({
+          model: model
+        });
+        return view.remove();
+      });
+      it("doesn't throw an error if there isn't a model", function() {
+        var view;
+        view = initView({
+          model: null
+        }, {
+          bindToModel: {
+            'event': 'action'
+          }
+        });
+        return view.remove();
+      });
+      it("throws an error if view action doesn't exists", function() {
+        return (function() {
+          var model, view;
+          model = new TestModel;
+          return view = initView({
+            model: model
+          }, {
+            bindToModel: {
+              'event': 'invalid$Action'
+            }
+          });
+        }).should["throw"]('Method invalid$Action does not exist');
+      });
+      it("throws an error if view action is not an function", function() {
+        return (function() {
+          var model, view;
+          model = new TestModel;
+          return view = initView({
+            model: model
+          }, {
+            action: 'String',
+            bindToModel: {
+              'event': 'action'
+            }
+          });
+        }).should["throw"]('action is not a function');
+      });
+      return it("unbinds from all model events when the view is removed removed", function() {
+        var model, view;
+        model = new TestModel;
+        view = initView({
+          model: model
+        }, {
+          bindToModel: {
+            'event': 'trackEvent'
+          },
+          eventTracked: false,
+          trackEvent: function() {
+            return this.eventTracked = true;
+          }
+        });
+        view.remove();
+        model.trigger('event');
+        return view.eventTracked.should.not.be["true"];
+      });
     });
   });
 
