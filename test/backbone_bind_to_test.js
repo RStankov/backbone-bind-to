@@ -2,27 +2,15 @@
 (function() {
 
   describe("Backbone.BindTo", function() {
-    var TestModel, TestView, initView, sandbox;
-    sandbox = {
-      use: function(dom) {
-        this.dom = $(dom);
-        return $('body').append(dom);
-      },
-      clear: function() {
-        if (this.dom) {
-          this.dom.remove();
-        }
-        return this.dom = null;
-      }
-    };
-    afterEach(function() {
-      return sandbox.clear();
-    });
+    var TestModel, TestView, initView;
     TestModel = Backbone.Model;
     TestView = Backbone.BindTo.View.extend({
       initialize: function() {
+        var _this = this;
         this.el.innerHTML = this.template;
-        return sandbox.use(this.el);
+        return afterEach(function() {
+          return _this.remove();
+        });
       }
     });
     initView = function(opts, properties) {

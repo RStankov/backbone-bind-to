@@ -1,20 +1,9 @@
 describe "Backbone.BindTo", ->
-  sandbox =
-    use: (dom) ->
-      @dom = $(dom)
-      $('body').append dom
-
-    clear: ->
-      @dom.remove() if @dom
-      @dom = null
-
-  afterEach -> sandbox.clear()
-
   TestModel = Backbone.Model
   TestView  = Backbone.BindTo.View.extend
     initialize: ->
       @el.innerHTML = @template
-      sandbox.use @el
+      afterEach => @remove()
 
   initView = (opts = {}, properties = {}) ->
     View = TestView.extend properties
