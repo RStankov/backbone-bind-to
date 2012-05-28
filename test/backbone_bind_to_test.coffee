@@ -13,6 +13,15 @@ describe "Backbone.BindTo", ->
   it "overwrites the original Backbone.View", ->
     Backbone.View.should.be.equal Backbone.BindTo.View
 
+  it "has noConflict method", ->
+    currentView = Backbone.View
+
+    Backbone.BindTo.noConflict()
+    Backbone.View.should.not.be.equal Backbone.BindTo.View
+
+    Backbone.View = currentView
+    Backbone.View.should.be.equal Backbone.BindTo.View
+
   describe "#bindToModel", ->
     it "can bind to several model events to view actions", ->
       model = new TestModel

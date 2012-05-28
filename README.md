@@ -56,3 +56,14 @@ window.TodoListView = Backbone.View.extend({
 
 Backbone.BindTo automatically ```unbinds``` from all model and collection events when the view element is removed via ```Backbone.View#remove```.
 
+### noConflict
+
+If extending directly `Backbone.View` bothers you. You can use the `noConflict` method on `Backbone.BindTo` to restore `Backbone.View`.
+
+```javascript
+window.BindView = Backbone.BindTo.noConflict()
+
+// from this moment on
+// Backbone.View is the normal Backbone.View
+// and BindView has bindToModel and bindToCollection helpers
+```

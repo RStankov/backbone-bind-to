@@ -28,6 +28,14 @@
     it("overwrites the original Backbone.View", function() {
       return Backbone.View.should.be.equal(Backbone.BindTo.View);
     });
+    it("has noConflict method", function() {
+      var currentView;
+      currentView = Backbone.View;
+      Backbone.BindTo.noConflict();
+      Backbone.View.should.not.be.equal(Backbone.BindTo.View);
+      Backbone.View = currentView;
+      return Backbone.View.should.be.equal(Backbone.BindTo.View);
+    });
     describe("#bindToModel", function() {
       it("can bind to several model events to view actions", function() {
         var model, view;
