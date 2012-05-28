@@ -1,7 +1,7 @@
 describe "Backbone.BindTo", ->
   TestModel = Backbone.Model
   TestCollection = Backbone.Collection
-  TestView = Backbone.BindTo.View.extend
+  TestView = Backbone.View.extend
     initialize: ->
       @el.innerHTML = @template
       afterEach => @remove()
@@ -9,6 +9,9 @@ describe "Backbone.BindTo", ->
   initView = (opts = {}, properties = {}) ->
     View = TestView.extend properties
     new View(opts)
+
+  it "overwrites the original Backbone.View", ->
+    Backbone.View.should.be.equal Backbone.BindTo.View
 
   describe "#bindToModel", ->
     it "can bind to several model events to view actions", ->

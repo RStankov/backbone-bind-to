@@ -5,7 +5,7 @@
     var TestCollection, TestModel, TestView, initView;
     TestModel = Backbone.Model;
     TestCollection = Backbone.Collection;
-    TestView = Backbone.BindTo.View.extend({
+    TestView = Backbone.View.extend({
       initialize: function() {
         var _this = this;
         this.el.innerHTML = this.template;
@@ -25,6 +25,9 @@
       View = TestView.extend(properties);
       return new View(opts);
     };
+    it("overwrites the original Backbone.View", function() {
+      return Backbone.View.should.be.equal(Backbone.BindTo.View);
+    });
     describe("#bindToModel", function() {
       it("can bind to several model events to view actions", function() {
         var model, view;

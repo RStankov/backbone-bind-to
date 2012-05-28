@@ -20,3 +20,5 @@ class Backbone.BindTo.View extends Backbone.View
     super
     unbindFrom.call @, @model, @bindToModel if @model
     unbindFrom.call @, @collection, @bindToCollection if @collection
+
+Backbone.View = Backbone.BindTo.View
