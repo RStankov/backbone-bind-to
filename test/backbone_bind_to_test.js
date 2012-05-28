@@ -62,12 +62,14 @@
         return view.email.should.be.equal('UserEmail');
       });
       it("doesn't throw an error if bindToModel is not specified", function() {
-        var model, view;
-        model = new TestModel;
-        view = initView({
-          model: model
-        });
-        return view.remove();
+        return (function() {
+          var model, view;
+          model = new TestModel;
+          view = initView({
+            model: model
+          });
+          return view.remove();
+        }).should.not["throw"]();
       });
       it("doesn't throw an error if there isn't a model", function() {
         var view;
@@ -158,12 +160,14 @@
         return view.items.should.be.eql(['item-1', 'item-2', 'item-3']);
       });
       it("doesn't throw an error if bindToCollection is not specified", function() {
-        var collection, view;
-        collection = new TestCollection;
-        view = initView({
-          collection: collection
-        });
-        return view.remove();
+        return (function() {
+          var collection, view;
+          collection = new TestCollection;
+          view = initView({
+            collection: collection
+          });
+          return view.remove();
+        }).should.not["throw"]();
       });
       it("doesn't throw an error if there isn't a collection", function() {
         var view;

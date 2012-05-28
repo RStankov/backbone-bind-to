@@ -43,9 +43,11 @@ describe "Backbone.BindTo", ->
       view.email.should.be.equal 'UserEmail'
 
     it "doesn't throw an error if bindToModel is not specified", ->
-      model = new TestModel
-      view  = initView {model}
-      view.remove()
+      (->
+        model = new TestModel
+        view  = initView {model}
+        view.remove()
+      ).should.not.throw()
 
     it "doesn't throw an error if there isn't a model", ->
       view = initView {model: null},
@@ -102,9 +104,11 @@ describe "Backbone.BindTo", ->
       view.items.should.be.eql ['item-1', 'item-2', 'item-3']
 
     it "doesn't throw an error if bindToCollection is not specified", ->
-      collection = new TestCollection
-      view = initView {collection}
-      view.remove()
+      (->
+        collection = new TestCollection
+        view = initView {collection}
+        view.remove()
+      ).should.not.throw()
 
     it "doesn't throw an error if there isn't a collection", ->
       view = initView {collection: null},
