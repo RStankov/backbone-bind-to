@@ -26,20 +26,21 @@ describe "Backbone.BindTo", ->
     it "can bind to several model events to view actions", ->
       model = new TestModel
       view  = initView {model},
-        template: '<div class="name"></div><div class="email"></div>'
+        name: null
+        email: null
 
         bindToModel:
           'change:name':  'renderName'
           'change:email': 'renderEmail'
 
-        renderName:  -> @$el.find('.name').html @model.get('name')
-        renderEmail: -> @$el.find('.email').html @model.get('email')
+        renderName:  -> @name = @model.get('name')
+        renderEmail: -> @email = @model.get('email')
 
       model.set 'name', 'UserName'
-      view.$('.name').html().should.be.equal 'UserName'
+      view.name.should.be.equal 'UserName'
 
       model.set 'email', 'UserEmail'
-      view.$('.email').html().should.be.equal 'UserEmail'
+      view.email.should.be.equal 'UserEmail'
 
     it "doesn't throw an error if bindToModel is not specified", ->
       model = new TestModel
@@ -86,17 +87,19 @@ describe "Backbone.BindTo", ->
     it "can bind to several collection events to view actions", ->
       collection = new TestCollection
       view = initView {collection},
+        items: []
+
         bindToCollection:
           'reset': 'resetItems'
           'add':   'addItem'
 
-        resetItems: -> @el.innerHTML = _.range(@collection.length).map(-> '<li></li>').join ''
-        addItem:    -> @$el.append '<li></li>'
+        resetItems: -> @items = @collection.invoke 'get', 'name'
+        addItem:    (item) -> @items.push item.get('name')
 
-      collection.reset ['item-1', 'item-2']
-      collection.add 'item-3'
+      collection.reset [{name: 'item-1'}, {name:'item-2'}]
+      collection.add name: 'item-3'
 
-      view.$el.find('li').length.should.be.equal 3
+      view.items.should.be.eql ['item-1', 'item-2', 'item-3']
 
     it "doesn't throw an error if bindToCollection is not specified", ->
       collection = new TestCollection

@@ -43,22 +43,23 @@
         view = initView({
           model: model
         }, {
-          template: '<div class="name"></div><div class="email"></div>',
+          name: null,
+          email: null,
           bindToModel: {
             'change:name': 'renderName',
             'change:email': 'renderEmail'
           },
           renderName: function() {
-            return this.$el.find('.name').html(this.model.get('name'));
+            return this.name = this.model.get('name');
           },
           renderEmail: function() {
-            return this.$el.find('.email').html(this.model.get('email'));
+            return this.email = this.model.get('email');
           }
         });
         model.set('name', 'UserName');
-        view.$('.name').html().should.be.equal('UserName');
+        view.name.should.be.equal('UserName');
         model.set('email', 'UserEmail');
-        return view.$('.email').html().should.be.equal('UserEmail');
+        return view.email.should.be.equal('UserEmail');
       });
       it("doesn't throw an error if bindToModel is not specified", function() {
         var model, view;
@@ -132,22 +133,29 @@
         view = initView({
           collection: collection
         }, {
+          items: [],
           bindToCollection: {
             'reset': 'resetItems',
             'add': 'addItem'
           },
           resetItems: function() {
-            return this.el.innerHTML = _.range(this.collection.length).map(function() {
-              return '<li></li>';
-            }).join('');
+            return this.items = this.collection.invoke('get', 'name');
           },
-          addItem: function() {
-            return this.$el.append('<li></li>');
+          addItem: function(item) {
+            return this.items.push(item.get('name'));
           }
         });
-        collection.reset(['item-1', 'item-2']);
-        collection.add('item-3');
-        return view.$el.find('li').length.should.be.equal(3);
+        collection.reset([
+          {
+            name: 'item-1'
+          }, {
+            name: 'item-2'
+          }
+        ]);
+        collection.add({
+          name: 'item-3'
+        });
+        return view.items.should.be.eql(['item-1', 'item-2', 'item-3']);
       });
       it("doesn't throw an error if bindToCollection is not specified", function() {
         var collection, view;
