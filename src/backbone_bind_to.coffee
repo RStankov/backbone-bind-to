@@ -2,6 +2,8 @@ root = @
 previousBackboneView = root.Backbone.View
 
 Backbone.BindTo =
+  VERSION: '1.0.0'
+
   noConflict: ->
     root.Backbone.View = previousBackboneView
     @View
