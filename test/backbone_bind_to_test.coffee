@@ -1,22 +1,17 @@
 describe "Backbone.BindTo", ->
-  TestModel = Backbone.Model
-  TestCollection = Backbone.Collection
-  TestView = Backbone.View.extend
-    initialize: ->
-      @el.innerHTML = @template
-      afterEach => @remove()
-
-  initView = (opts = {}, properties = {}) ->
-    View = TestView.extend properties
+  createView = (opts = {}, properties = {}) ->
+    View = Backbone.View.extend properties
     new View(opts)
 
   it "overwrites the original Backbone.View", ->
     Backbone.View.should.be.equal Backbone.BindTo.View
 
   describe "#bindToModel", ->
+    TestModel = Backbone.Model
+
     it "can bind to several model events to view actions", ->
       model = new TestModel
-      view  = initView {model},
+      view  = createView {model},
         name: null
         email: null
 
@@ -36,12 +31,12 @@ describe "Backbone.BindTo", ->
     it "doesn't throw an error if bindToModel is not specified", ->
       (->
         model = new TestModel
-        view  = initView {model}
+        view  = createView {model}
         view.remove()
       ).should.not.throw()
 
     it "doesn't throw an error if there isn't a model", ->
-      view = initView {model: null},
+      view = createView {model: null},
         bindToModel:
           'event': 'action'
       view.remove()
@@ -49,7 +44,7 @@ describe "Backbone.BindTo", ->
     it "throws an error if view action doesn't exists", ->
       (->
         model = new TestModel
-        view  = initView {model},
+        view  = createView {model},
           bindToModel:
             'event': 'invalid$Action'
       ).should.throw 'Method invalid$Action does not exist'
@@ -57,7 +52,7 @@ describe "Backbone.BindTo", ->
     it "throws an error if view action is not an function", ->
       (->
         model = new TestModel
-        view  = initView {model},
+        view  = createView {model},
           action: 'String'
           bindToModel:
             'event': 'action'
@@ -65,7 +60,7 @@ describe "Backbone.BindTo", ->
 
     it "unbinds from all model events when the view is removed removed", ->
       model = new TestModel
-      view  = initView {model},
+      view  = createView {model},
         bindToModel: {'event':  'trackEvent'}
         eventTracked: false
         trackEvent: -> @eventTracked = true
@@ -77,9 +72,11 @@ describe "Backbone.BindTo", ->
       view.eventTracked.should.not.be.true
 
   describe "#bindToCollection", ->
+    TestCollection = Backbone.Collection
+
     it "can bind to several collection events to view actions", ->
       collection = new TestCollection
-      view = initView {collection},
+      view = createView {collection},
         items: []
 
         bindToCollection:
@@ -97,12 +94,12 @@ describe "Backbone.BindTo", ->
     it "doesn't throw an error if bindToCollection is not specified", ->
       (->
         collection = new TestCollection
-        view = initView {collection}
+        view = createView {collection}
         view.remove()
       ).should.not.throw()
 
     it "doesn't throw an error if there isn't a collection", ->
-      view = initView {collection: null},
+      view = createView {collection: null},
         bindToCollection:
           'event': 'action'
       view.remove()
@@ -110,7 +107,7 @@ describe "Backbone.BindTo", ->
     it "throws an error if view action doesn't exists", ->
       (->
         collection = new TestCollection
-        view = initView {collection},
+        view = createView {collection},
           bindToCollection:
             'event': 'invalid$Action'
       ).should.throw 'Method invalid$Action does not exist'
@@ -118,7 +115,7 @@ describe "Backbone.BindTo", ->
     it "throws an error if view action is not an function", ->
       (->
         collection = new TestCollection
-        view = initView {collection},
+        view = createView {collection},
           action: 'String'
           bindToCollection:
             'event': 'action'
@@ -126,7 +123,7 @@ describe "Backbone.BindTo", ->
 
     it "unbinds from all collection events when the view is removed removed", ->
       collection = new TestCollection
-      view = initView {collection},
+      view = createView {collection},
         bindToCollection: {'event':  'trackEvent'}
         eventTracked: false
         trackEvent: -> @eventTracked = true

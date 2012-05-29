@@ -2,19 +2,8 @@
 (function() {
 
   describe("Backbone.BindTo", function() {
-    var TestCollection, TestModel, TestView, initView;
-    TestModel = Backbone.Model;
-    TestCollection = Backbone.Collection;
-    TestView = Backbone.View.extend({
-      initialize: function() {
-        var _this = this;
-        this.el.innerHTML = this.template;
-        return afterEach(function() {
-          return _this.remove();
-        });
-      }
-    });
-    initView = function(opts, properties) {
+    var createView;
+    createView = function(opts, properties) {
       var View;
       if (opts == null) {
         opts = {};
@@ -22,17 +11,19 @@
       if (properties == null) {
         properties = {};
       }
-      View = TestView.extend(properties);
+      View = Backbone.View.extend(properties);
       return new View(opts);
     };
     it("overwrites the original Backbone.View", function() {
       return Backbone.View.should.be.equal(Backbone.BindTo.View);
     });
     describe("#bindToModel", function() {
+      var TestModel;
+      TestModel = Backbone.Model;
       it("can bind to several model events to view actions", function() {
         var model, view;
         model = new TestModel;
-        view = initView({
+        view = createView({
           model: model
         }, {
           name: null,
@@ -57,7 +48,7 @@
         return (function() {
           var model, view;
           model = new TestModel;
-          view = initView({
+          view = createView({
             model: model
           });
           return view.remove();
@@ -65,7 +56,7 @@
       });
       it("doesn't throw an error if there isn't a model", function() {
         var view;
-        view = initView({
+        view = createView({
           model: null
         }, {
           bindToModel: {
@@ -78,7 +69,7 @@
         return (function() {
           var model, view;
           model = new TestModel;
-          return view = initView({
+          return view = createView({
             model: model
           }, {
             bindToModel: {
@@ -91,7 +82,7 @@
         return (function() {
           var model, view;
           model = new TestModel;
-          return view = initView({
+          return view = createView({
             model: model
           }, {
             action: 'String',
@@ -104,7 +95,7 @@
       return it("unbinds from all model events when the view is removed removed", function() {
         var model, view;
         model = new TestModel;
-        view = initView({
+        view = createView({
           model: model
         }, {
           bindToModel: {
@@ -121,10 +112,12 @@
       });
     });
     describe("#bindToCollection", function() {
+      var TestCollection;
+      TestCollection = Backbone.Collection;
       it("can bind to several collection events to view actions", function() {
         var collection, view;
         collection = new TestCollection;
-        view = initView({
+        view = createView({
           collection: collection
         }, {
           items: [],
@@ -155,7 +148,7 @@
         return (function() {
           var collection, view;
           collection = new TestCollection;
-          view = initView({
+          view = createView({
             collection: collection
           });
           return view.remove();
@@ -163,7 +156,7 @@
       });
       it("doesn't throw an error if there isn't a collection", function() {
         var view;
-        view = initView({
+        view = createView({
           collection: null
         }, {
           bindToCollection: {
@@ -176,7 +169,7 @@
         return (function() {
           var collection, view;
           collection = new TestCollection;
-          return view = initView({
+          return view = createView({
             collection: collection
           }, {
             bindToCollection: {
@@ -189,7 +182,7 @@
         return (function() {
           var collection, view;
           collection = new TestCollection;
-          return view = initView({
+          return view = createView({
             collection: collection
           }, {
             action: 'String',
@@ -202,7 +195,7 @@
       return it("unbinds from all collection events when the view is removed removed", function() {
         var collection, view;
         collection = new TestCollection;
-        view = initView({
+        view = createView({
           collection: collection
         }, {
           bindToCollection: {
