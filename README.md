@@ -1,7 +1,7 @@
 Backbone.BindTo
 ===============
 
-[Backbone.js](http://documentcloud.github.com/backbone/) extension for automatic binding and unbinding of model and collection events to views.
+[Backbone.js](http://documentcloud.github.com/backbone/) extension for automatic binding and unbinding of model events to views.
 
 
 ### BindToModel
@@ -15,10 +15,8 @@ window.UserCard = Backbone.View.extend({
     this.model.bind('change:email', this.renderEmail, this);
   },
   remove: function() {
-    // protects you from "ghost" views
     this.model.unbind('change:name',  this.renderName,  this);
     this.model.unbind('change:email', this.renderEmail, this);
-
     Backbone.View.prototype.remove.call(this);
   },
   renderName:  function() { /* ... code ... */ },
@@ -26,7 +24,7 @@ window.UserCard = Backbone.View.extend({
 });
 ```
 
-With Backbone.BindTo this could be simplified just to:
+With Backbone.BindTo you can just do:
 
 ```javascript
 window.UserCard = Backbone.View.extend({
@@ -41,7 +39,7 @@ window.UserCard = Backbone.View.extend({
 
 ### BindToCollection
 
-Of course, there is a similar method for binding to collection events
+Of course, there is a similar method for binding to collection events:
 
 ```javascript
 window.TodoListView = Backbone.View.extend({
@@ -58,12 +56,10 @@ Backbone.BindTo automatically ```unbinds``` from all model and collection events
 
 ### noConflict
 
-If extending directly `Backbone.View` bothers you. You can use the `noConflict` method on `Backbone.BindTo` to restore `Backbone.View`.
+If extending directly ```Backbone.View``` bothers you. You can use the ```Backbone.BindTo.noConflict``` method. It  restores ```Backbone.View``` to its original value. And returns the ```Backbone.BindTo.View``` object which has the ```bindToModel``` and ```bindToCollection``` helpers.
 
 ```javascript
-window.BindView = Backbone.BindTo.noConflict()
-
-// from this moment on
-// Backbone.View is the normal Backbone.View
-// and BindView has bindToModel and bindToCollection helpers
+window.BindToView = Backbone.BindTo.noConflict()
 ```
+
+
