@@ -28,14 +28,6 @@
     it("overwrites the original Backbone.View", function() {
       return Backbone.View.should.be.equal(Backbone.BindTo.View);
     });
-    it("has noConflict method", function() {
-      var currentView;
-      currentView = Backbone.View;
-      Backbone.BindTo.noConflict();
-      Backbone.View.should.not.be.equal(Backbone.BindTo.View);
-      Backbone.View = currentView;
-      return Backbone.View.should.be.equal(Backbone.BindTo.View);
-    });
     describe("#bindToModel", function() {
       it("can bind to several model events to view actions", function() {
         var model, view;
@@ -128,7 +120,7 @@
         return view.eventTracked.should.not.be["true"];
       });
     });
-    return describe("#bindToCollection", function() {
+    describe("#bindToCollection", function() {
       it("can bind to several collection events to view actions", function() {
         var collection, view;
         collection = new TestCollection;
@@ -224,6 +216,21 @@
         view.remove();
         collection.trigger('event');
         return view.eventTracked.should.not.be["true"];
+      });
+    });
+    return describe(".noConflict", function() {
+      beforeEach(function() {
+        return this.currentView = Backbone.View;
+      });
+      afterEach(function() {
+        return Backbone.View = this.currentView;
+      });
+      it("restores the Backbone.View to its original value", function() {
+        Backbone.BindTo.noConflict();
+        return Backbone.View.should.not.be.equal(Backbone.BindTo.View);
+      });
+      return it("returns the Backbone.BindTo.View", function() {
+        return Backbone.BindTo.noConflict().should.be.equal(Backbone.BindTo.View);
       });
     });
   });
