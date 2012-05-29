@@ -1,12 +1,5 @@
 root = @
-previousBackboneView = root.Backbone.View
-
-Backbone.BindTo =
-  VERSION: '1.0.0'
-
-  noConflict: ->
-    root.Backbone.View = previousBackboneView
-    @View
+BackboneView = root.Backbone.View
 
 bindTo = (object, events) ->
   for eventName, methodName of events
@@ -18,7 +11,7 @@ unbindFrom = (object, events) ->
   for eventName, methodName of events
     object.off eventName, @[methodName], @
 
-class Backbone.BindTo.View extends previousBackboneView
+class BindToView extends BackboneView
   constructor: ->
     super
     bindTo.call @, @model, @bindToModel if @model
@@ -28,5 +21,14 @@ class Backbone.BindTo.View extends previousBackboneView
     super
     unbindFrom.call @, @model, @bindToModel if @model
     unbindFrom.call @, @collection, @bindToCollection if @collection
+
+Backbone.BindTo =
+  VERSION: '1.0.0'
+
+  noConflict: ->
+    root.Backbone.View = BackboneView
+    BindToView
+
+  View: BindToView
 
 root.Backbone.View = Backbone.BindTo.View
