@@ -3,8 +3,9 @@ Backbone.BindTo
 
 [Backbone.js](http://documentcloud.github.com/backbone/) extension for automatic binding and unbinding of model events to views.
 
+### Features
 
-### BindToModel
+#### BindToModel
 
 In a lot of [Backbone.js](http://documentcloud.github.com/backbone/) applications when you want to react to __model__ events you have to write:
 
@@ -37,7 +38,7 @@ window.UserCard = Backbone.View.extend({
 });
 ```
 
-### BindToCollection
+#### BindToCollection
 
 Of course, there is a similar method for binding to collection events:
 
@@ -50,11 +51,11 @@ window.TodoListView = Backbone.View.extend({
 });
 ```
 
-### Remove
+#### Remove
 
 Backbone.BindTo automatically ```unbinds``` from all model and collection events when the view element is removed via ```Backbone.View#remove```.
 
-### noConflict
+#### noConflict
 
 If extending directly ```Backbone.View``` bothers you. You can use the ```Backbone.BindTo.noConflict``` method. It  restores ```Backbone.View``` to its original value. And returns the ```Backbone.BindTo.View``` object which has the ```bindToModel``` and ```bindToCollection``` helpers.
 
@@ -62,4 +63,30 @@ If extending directly ```Backbone.View``` bothers you. You can use the ```Backbo
 window.BindToView = Backbone.BindTo.noConflict()
 ```
 
+### Installing
 
+Just copy ```lib/backone_bind_to.js``` into your project. Or if you are using [CoffeeScript](http://http://coffeescript.org/) you can use directly - ```src/backbone_bind_to.coffee```.
+
+### Requirements
+
+```
+Backbone.js - 0.9.2+
+```
+
+### Running the tests
+
+Just open - ```test/runner.html```
+
+### Contributing
+
+Every fresh idea and contribution will be highly appreciated.
+
+If you are making changes please do so in the ```coffee``` files. And then compile them with:
+
+```
+cake build
+```
+
+### License
+
+MIT License.
