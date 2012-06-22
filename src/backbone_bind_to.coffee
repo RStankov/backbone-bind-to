@@ -1,3 +1,11 @@
+###
+ Backbone Handlebars
+
+ Author: Radoslav Stankov
+ Project site: https://github.com/RStankov/backbone-bind-to
+ Licensed under the MIT License.
+###
+
 root = @
 BackboneView = root.Backbone.View
 
