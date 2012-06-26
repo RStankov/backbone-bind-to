@@ -2,9 +2,11 @@
 (function() {
 
   describe("Backbone.BindTo", function() {
-    var TestCollection, TestModel, createView;
+    var TestCollection, TestModel, TestObject, createView;
     TestModel = Backbone.Model;
     TestCollection = Backbone.Collection;
+    TestObject = function() {};
+    _.extend(TestObject.prototype, Backbone.Events);
     createView = function(opts, properties) {
       var View;
       if (opts == null) {
@@ -174,9 +176,6 @@
       });
     });
     describe("#bindTo", function() {
-      var TestObject;
-      TestObject = function() {};
-      _.extend(TestObject.prototype, Backbone.Events);
       it("can bind to object events", function() {
         var object, view;
         object = new TestObject;
@@ -241,7 +240,7 @@
         model.trigger('event');
         return view.eventTracked.should.not.be["true"];
       });
-      return it("unbinds from all collection events when the view is removed", function() {
+      it("unbinds from all collection events when the view is removed", function() {
         var collection, view;
         collection = new TestCollection;
         view = createView({
@@ -257,6 +256,24 @@
         });
         view.remove();
         collection.trigger('event');
+        return view.eventTracked.should.not.be["true"];
+      });
+      return it("unbinds from all observed objects binded with #bindTo", function() {
+        var object, view;
+        object = new TestObject;
+        view = createView({
+          object: object
+        }, {
+          eventTracked: false,
+          initialize: function() {
+            return this.bindTo(object, 'event', 'trackEvent');
+          },
+          trackEvent: function() {
+            return this.eventTracked = true;
+          }
+        });
+        view.remove();
+        object.trigger('event');
         return view.eventTracked.should.not.be["true"];
       });
     });

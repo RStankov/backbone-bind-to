@@ -1,6 +1,8 @@
 describe "Backbone.BindTo", ->
   TestModel = Backbone.Model
   TestCollection = Backbone.Collection
+  TestObject = ->
+  _.extend TestObject.prototype, Backbone.Events
 
   createView = (opts = {}, properties = {}) ->
     View = Backbone.View.extend properties
@@ -108,9 +110,6 @@ describe "Backbone.BindTo", ->
       ).should.throw 'action is not a function'
 
   describe "#bindTo", ->
-    TestObject = ->
-    _.extend TestObject.prototype, Backbone.Events
-
     it "can bind to object events", ->
       object = new TestObject
       view   = createView {object},
@@ -162,6 +161,20 @@ describe "Backbone.BindTo", ->
       collection.trigger 'event'
 
       view.eventTracked.should.not.be.true
+
+    it "unbinds from all observed objects binded with #bindTo", ->
+      object = new TestObject
+      view   = createView {object},
+        eventTracked: false
+        initialize: -> @bindTo object, 'event', 'trackEvent'
+        trackEvent: -> @eventTracked = true
+
+      view.remove()
+
+      object.trigger 'event'
+
+      view.eventTracked.should.not.be.true
+
 
   describe ".noConflict", ->
     beforeEach -> @currentView = Backbone.View
