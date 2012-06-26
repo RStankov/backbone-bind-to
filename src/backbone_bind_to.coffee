@@ -15,10 +15,6 @@ bindTo = (object, events) ->
     throw new Error "#{methodName} is not a function" unless typeof @[methodName] is 'function'
     object.on eventName, @[methodName], @
 
-unbindFrom = (object, events) ->
-  for eventName, methodName of events
-    object.off eventName, @[methodName], @
-
 class BindToView extends BackboneView
   constructor: ->
     super
