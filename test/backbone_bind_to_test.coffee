@@ -1,4 +1,7 @@
 describe "Backbone.BindTo", ->
+  TestModel = Backbone.Model
+  TestCollection = Backbone.Collection
+
   createView = (opts = {}, properties = {}) ->
     View = Backbone.View.extend properties
     new View(opts)
@@ -7,8 +10,6 @@ describe "Backbone.BindTo", ->
     Backbone.View.should.be.equal Backbone.BindTo.View
 
   describe "#bindToModel", ->
-    TestModel = Backbone.Model
-
     it "can bind to several model events to view actions", ->
       model = new TestModel
       view  = createView {model},
@@ -58,22 +59,7 @@ describe "Backbone.BindTo", ->
             'event': 'action'
       ).should.throw 'action is not a function'
 
-    it "unbinds from all model events when the view is removed removed", ->
-      model = new TestModel
-      view  = createView {model},
-        bindToModel: {'event':  'trackEvent'}
-        eventTracked: false
-        trackEvent: -> @eventTracked = true
-
-      view.remove()
-
-      model.trigger 'event'
-
-      view.eventTracked.should.not.be.true
-
   describe "#bindToCollection", ->
-    TestCollection = Backbone.Collection
-
     it "can bind to several collection events to view actions", ->
       collection = new TestCollection
       view = createView {collection},
@@ -121,11 +107,25 @@ describe "Backbone.BindTo", ->
             'event': 'action'
       ).should.throw 'action is not a function'
 
-    it "unbinds from all collection events when the view is removed removed", ->
+  describe "remove view", ->
+    it "unbinds from all model events when the view is removed", ->
+      model = new TestModel
+      view  = createView {model},
+        eventTracked: false
+        initialize: -> @model.on 'event', @trackEvent, @
+        trackEvent: -> @eventTracked = true
+
+      view.remove()
+
+      model.trigger 'event'
+
+      view.eventTracked.should.not.be.true
+
+    it "unbinds from all collection events when the view is removed", ->
       collection = new TestCollection
       view = createView {collection},
-        bindToCollection: {'event':  'trackEvent'}
         eventTracked: false
+        initialize: -> @collection.on 'event', @trackEvent, @
         trackEvent: -> @eventTracked = true
 
       view.remove()

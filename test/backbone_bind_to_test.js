@@ -2,7 +2,9 @@
 (function() {
 
   describe("Backbone.BindTo", function() {
-    var createView;
+    var TestCollection, TestModel, createView;
+    TestModel = Backbone.Model;
+    TestCollection = Backbone.Collection;
     createView = function(opts, properties) {
       var View;
       if (opts == null) {
@@ -18,8 +20,6 @@
       return Backbone.View.should.be.equal(Backbone.BindTo.View);
     });
     describe("#bindToModel", function() {
-      var TestModel;
-      TestModel = Backbone.Model;
       it("can bind to several model events to view actions", function() {
         var model, view;
         model = new TestModel;
@@ -78,7 +78,7 @@
           });
         }).should["throw"]('Method invalid$Action does not exist');
       });
-      it("throws an error if view action is not an function", function() {
+      return it("throws an error if view action is not an function", function() {
         return (function() {
           var model, view;
           model = new TestModel;
@@ -92,28 +92,8 @@
           });
         }).should["throw"]('action is not a function');
       });
-      return it("unbinds from all model events when the view is removed removed", function() {
-        var model, view;
-        model = new TestModel;
-        view = createView({
-          model: model
-        }, {
-          bindToModel: {
-            'event': 'trackEvent'
-          },
-          eventTracked: false,
-          trackEvent: function() {
-            return this.eventTracked = true;
-          }
-        });
-        view.remove();
-        model.trigger('event');
-        return view.eventTracked.should.not.be["true"];
-      });
     });
     describe("#bindToCollection", function() {
-      var TestCollection;
-      TestCollection = Backbone.Collection;
       it("can bind to several collection events to view actions", function() {
         var collection, view;
         collection = new TestCollection;
@@ -178,7 +158,7 @@
           });
         }).should["throw"]('Method invalid$Action does not exist');
       });
-      it("throws an error if view action is not an function", function() {
+      return it("throws an error if view action is not an function", function() {
         return (function() {
           var collection, view;
           collection = new TestCollection;
@@ -192,16 +172,36 @@
           });
         }).should["throw"]('action is not a function');
       });
-      return it("unbinds from all collection events when the view is removed removed", function() {
+    });
+    describe("remove view", function() {
+      it("unbinds from all model events when the view is removed", function() {
+        var model, view;
+        model = new TestModel;
+        view = createView({
+          model: model
+        }, {
+          eventTracked: false,
+          initialize: function() {
+            return this.model.on('event', this.trackEvent, this);
+          },
+          trackEvent: function() {
+            return this.eventTracked = true;
+          }
+        });
+        view.remove();
+        model.trigger('event');
+        return view.eventTracked.should.not.be["true"];
+      });
+      return it("unbinds from all collection events when the view is removed", function() {
         var collection, view;
         collection = new TestCollection;
         view = createView({
           collection: collection
         }, {
-          bindToCollection: {
-            'event': 'trackEvent'
-          },
           eventTracked: false,
+          initialize: function() {
+            return this.collection.on('event', this.trackEvent, this);
+          },
           trackEvent: function() {
             return this.eventTracked = true;
           }

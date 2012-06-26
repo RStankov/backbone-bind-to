@@ -27,8 +27,8 @@ class BindToView extends BackboneView
 
   remove: ->
     super
-    unbindFrom.call @, @model, @bindToModel if @model
-    unbindFrom.call @, @collection, @bindToCollection if @collection
+    @model.off null, null, @ if @model
+    @collection.off null, null, @ if @collection
 
 Backbone.BindTo =
   VERSION: '1.0.0'
