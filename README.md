@@ -10,7 +10,7 @@ Backbone.BindTo
 In a lot of [Backbone.js](http://documentcloud.github.com/backbone/) applications when you want to react to __model__ events you have to write:
 
 ```javascript
-window.UserCard = Backbone.View.extend({
+window.UserCardView = Backbone.View.extend({
   initialize: function() {
     this.model.bind('change:name',  this.renderName,  this);
     this.model.bind('change:email', this.renderEmail, this);
@@ -18,7 +18,7 @@ window.UserCard = Backbone.View.extend({
   remove: function() {
     this.model.unbind('change:name',  this.renderName,  this);
     this.model.unbind('change:email', this.renderEmail, this);
-    Backbone.View.prototype.remove.call(this);
+    Backbone.View.prototype.remove.apply(this, arguments);
   },
   renderName:  function() { /* ... code ... */ },
   renderEmail: function() { /* ... code ... */ }
@@ -28,7 +28,7 @@ window.UserCard = Backbone.View.extend({
 With Backbone.BindTo you can just do:
 
 ```javascript
-window.UserCard = Backbone.View.extend({
+window.UserCardView = Backbone.View.extend({
   bindToModel: {
     'change:name':  'renderName',
     'change:email': 'renderEmail'
@@ -51,9 +51,37 @@ window.TodoListView = Backbone.View.extend({
 });
 ```
 
+#### bindTo
+
+You can also use a generic bind function:
+
+```javascript
+window.CommentView = Backbone.View.extend({
+  initialize: function() {
+    this.parentView.on('editing:start', this.onEditingStart, this);
+  },
+  remove: function() {
+    this.parentView.off('editing:start', this.onEditingStart, this);
+    Backbone.View.prototype.remove.apply(this, arguments);
+  },
+  onEditingStart:  function() { /* ... code ... */ }
+});
+```
+
+Can be simplified as:
+
+```javascript
+window.CommentView = Backbone.View.extend({
+  initialize: function() {
+    this.bindTo(this.parentView, 'editing:start', 'onEditingStart');
+  },
+  onEditingStart:  function() { /* ... code ... */ }
+});
+```
+
 #### Remove
 
-Backbone.BindTo automatically ```unbinds``` from all model and collection events when the view element is removed via ```Backbone.View#remove```.
+Backbone.BindTo automatically ```unbinds``` from all model and collection events when the view element is removed via ```Backbone.View#remove```. Also unbinds from all events binded via ```#bindTo```.
 
 #### noConflict
 
