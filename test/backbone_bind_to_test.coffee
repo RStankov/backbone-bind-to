@@ -107,7 +107,36 @@ describe "Backbone.BindTo", ->
             'event': 'action'
       ).should.throw 'action is not a function'
 
-  describe "remove view", ->
+  describe "#bindTo", ->
+    TestObject = ->
+    _.extend TestObject.prototype, Backbone.Events
+
+    it "can bind to object events", ->
+      object = new TestObject
+      view   = createView {object},
+        eventTracked: false
+        initialize: -> @bindTo @options.object, 'event', 'trackEvent'
+        trackEvent: -> @eventTracked = true
+
+      object.trigger 'event'
+
+      view.eventTracked.should.not.be.false
+
+    it "throws an error if view action doesn't exists", ->
+      (->
+        object = new TestObject
+        createView {object}, initialize: -> @bindTo @options.object, 'event', 'invalid$Action'
+      ).should.throw 'Method invalid$Action does not exist'
+
+    it "throws an error if view action is not an function", ->
+      (->
+        object = new TestObject
+        createView {object},
+          action: 'String'
+          initialize: -> @bindTo @options.object, 'event', 'action'
+      ).should.throw 'action is not a function'
+
+  describe "#remove", ->
     it "unbinds from all model events when the view is removed", ->
       model = new TestModel
       view  = createView {model},

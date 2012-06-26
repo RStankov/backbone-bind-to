@@ -9,20 +9,21 @@
 root = @
 BackboneView = root.Backbone.View
 
-bindTo = (object, events) ->
-  for eventName, methodName of events
+class BindToView extends BackboneView
+  constructor: ->
+    super
+
+    @bindTo @model, eventName, methodName for eventName, methodName of @bindToModel if @model
+    @bindTo @collection, eventName, methodName for eventName, methodName of @bindToCollection if @collection
+
+  bindTo: (object, eventName, methodName) ->
     throw new Error "Method #{methodName} does not exists" unless @[methodName]
     throw new Error "#{methodName} is not a function" unless typeof @[methodName] is 'function'
     object.on eventName, @[methodName], @
 
-class BindToView extends BackboneView
-  constructor: ->
-    super
-    bindTo.call @, @model, @bindToModel if @model
-    bindTo.call @, @collection, @bindToCollection if @collection
-
   remove: ->
     super
+
     @model.off null, null, @ if @model
     @collection.off null, null, @ if @collection
 

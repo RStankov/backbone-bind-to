@@ -173,7 +173,56 @@
         }).should["throw"]('action is not a function');
       });
     });
-    describe("remove view", function() {
+    describe("#bindTo", function() {
+      var TestObject;
+      TestObject = function() {};
+      _.extend(TestObject.prototype, Backbone.Events);
+      it("can bind to object events", function() {
+        var object, view;
+        object = new TestObject;
+        view = createView({
+          object: object
+        }, {
+          eventTracked: false,
+          initialize: function() {
+            return this.bindTo(this.options.object, 'event', 'trackEvent');
+          },
+          trackEvent: function() {
+            return this.eventTracked = true;
+          }
+        });
+        object.trigger('event');
+        return view.eventTracked.should.not.be["false"];
+      });
+      it("throws an error if view action doesn't exists", function() {
+        return (function() {
+          var object;
+          object = new TestObject;
+          return createView({
+            object: object
+          }, {
+            initialize: function() {
+              return this.bindTo(this.options.object, 'event', 'invalid$Action');
+            }
+          });
+        }).should["throw"]('Method invalid$Action does not exist');
+      });
+      return it("throws an error if view action is not an function", function() {
+        return (function() {
+          var object;
+          object = new TestObject;
+          return createView({
+            object: object
+          }, {
+            action: 'String',
+            initialize: function() {
+              return this.bindTo(this.options.object, 'event', 'action');
+            }
+          });
+        }).should["throw"]('action is not a function');
+      });
+    });
+    describe("#remove", function() {
       it("unbinds from all model events when the view is removed", function() {
         var model, view;
         model = new TestModel;
