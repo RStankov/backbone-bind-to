@@ -1,5 +1,5 @@
 ###
- Backbone Handlebars
+ Backbone.BindTo
 
  Author: Radoslav Stankov
  Project site: https://github.com/RStankov/backbone-bind-to
