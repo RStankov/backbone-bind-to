@@ -157,58 +157,59 @@ describe "Backbone.BindTo", ->
       view.eventTracked.should.not.be.false
 
 
-  describe "#remove", ->
-    it "unbinds from all model events when the view is removed", ->
-      model = new TestModel
-      view  = createView {model},
-        eventTracked: false
-        initialize: -> @model.on 'event', @trackEvent, @
-        trackEvent: -> @eventTracked = true
+  _.each ['remove', 'unbindFromAll'], (methodName) ->
+    describe "##{methodName}", ->
+      it "unbinds from all model events when the view is removed", ->
+        model = new TestModel
+        view  = createView {model},
+          eventTracked: false
+          initialize: -> @model.on 'event', @trackEvent, @
+          trackEvent: -> @eventTracked = true
 
-      view.remove()
+        view[methodName]()
 
-      model.trigger 'event'
+        model.trigger 'event'
 
-      view.eventTracked.should.not.be.true
+        view.eventTracked.should.not.be.true
 
-    it "unbinds from all collection events when the view is removed", ->
-      collection = new TestCollection
-      view = createView {collection},
-        eventTracked: false
-        initialize: -> @collection.on 'event', @trackEvent, @
-        trackEvent: -> @eventTracked = true
+      it "unbinds from all collection events when the view is removed", ->
+        collection = new TestCollection
+        view = createView {collection},
+          eventTracked: false
+          initialize: -> @collection.on 'event', @trackEvent, @
+          trackEvent: -> @eventTracked = true
 
-      view.remove()
+        view[methodName]()
 
-      collection.trigger 'event'
+        collection.trigger 'event'
 
-      view.eventTracked.should.not.be.true
+        view.eventTracked.should.not.be.true
 
-    it "unbinds from all observed objects binded with #bindTo", ->
-      div  = document.createElement 'div'
-      view = createView {},
-        eventTracked: false
-        initialize: -> @bindTo div, 'click', 'trackEvent'
-        trackEvent: -> @eventTracked = true
+      it "unbinds from all observed objects binded with #bindTo", ->
+        div  = document.createElement 'div'
+        view = createView {},
+          eventTracked: false
+          initialize: -> @bindTo div, 'click', 'trackEvent'
+          trackEvent: -> @eventTracked = true
 
-      view.remove()
+        view[methodName]()
 
-      $(div).trigger 'click'
+        $(div).trigger 'click'
 
-      view.eventTracked.should.be.false
+        view.eventTracked.should.be.false
 
-    it "unbinds from all observed elements binded with #bindTo", ->
-      object = new TestObject
-      view   = createView {object},
-        eventTracked: false
-        initialize: -> @bindTo object, 'event', 'trackEvent'
-        trackEvent: -> @eventTracked = true
+      it "unbinds from all observed elements binded with #bindTo", ->
+        object = new TestObject
+        view   = createView {object},
+          eventTracked: false
+          initialize: -> @bindTo object, 'event', 'trackEvent'
+          trackEvent: -> @eventTracked = true
 
-      view.remove()
+        view[methodName]()
 
-      object.trigger 'event'
+        object.trigger 'event'
 
-      view.eventTracked.should.not.be.true
+        view.eventTracked.should.not.be.true
 
 
   describe ".noConflict", ->

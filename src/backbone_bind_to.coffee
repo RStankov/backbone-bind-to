@@ -29,13 +29,21 @@ class BindToView extends BackboneView
       @_binded.push object
       Backbone.$(object).on "#{eventName}.bindToEvent", _.bind(callback, this)
 
-  remove: ->
+    this
+
+  unbindFromAll: ->
     @model.off null, null, @ if @model and @model.off
     @collection.off null, null, @ if @collection and @collection.off
 
     Backbone.$(element).off '.bindToEvent' for element in @_binded if @_binded
     delete @_binded
 
+    @stopListening()
+
+    this
+
+  remove: ->
+    @unbindFromAll()
     super
 
 Backbone.BindTo =

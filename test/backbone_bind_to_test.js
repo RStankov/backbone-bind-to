@@ -253,76 +253,78 @@
         return view.eventTracked.should.not.be["false"];
       });
     });
-    describe("#remove", function() {
-      it("unbinds from all model events when the view is removed", function() {
-        var model, view;
-        model = new TestModel;
-        view = createView({
-          model: model
-        }, {
-          eventTracked: false,
-          initialize: function() {
-            return this.model.on('event', this.trackEvent, this);
-          },
-          trackEvent: function() {
-            return this.eventTracked = true;
-          }
+    _.each(['remove', 'unbindFromAll'], function(methodName) {
+      return describe("#" + methodName, function() {
+        it("unbinds from all model events when the view is removed", function() {
+          var model, view;
+          model = new TestModel;
+          view = createView({
+            model: model
+          }, {
+            eventTracked: false,
+            initialize: function() {
+              return this.model.on('event', this.trackEvent, this);
+            },
+            trackEvent: function() {
+              return this.eventTracked = true;
+            }
+          });
+          view[methodName]();
+          model.trigger('event');
+          return view.eventTracked.should.not.be["true"];
         });
-        view.remove();
-        model.trigger('event');
-        return view.eventTracked.should.not.be["true"];
-      });
-      it("unbinds from all collection events when the view is removed", function() {
-        var collection, view;
-        collection = new TestCollection;
-        view = createView({
-          collection: collection
-        }, {
-          eventTracked: false,
-          initialize: function() {
-            return this.collection.on('event', this.trackEvent, this);
-          },
-          trackEvent: function() {
-            return this.eventTracked = true;
-          }
+        it("unbinds from all collection events when the view is removed", function() {
+          var collection, view;
+          collection = new TestCollection;
+          view = createView({
+            collection: collection
+          }, {
+            eventTracked: false,
+            initialize: function() {
+              return this.collection.on('event', this.trackEvent, this);
+            },
+            trackEvent: function() {
+              return this.eventTracked = true;
+            }
+          });
+          view[methodName]();
+          collection.trigger('event');
+          return view.eventTracked.should.not.be["true"];
         });
-        view.remove();
-        collection.trigger('event');
-        return view.eventTracked.should.not.be["true"];
-      });
-      it("unbinds from all observed objects binded with #bindTo", function() {
-        var div, view;
-        div = document.createElement('div');
-        view = createView({}, {
-          eventTracked: false,
-          initialize: function() {
-            return this.bindTo(div, 'click', 'trackEvent');
-          },
-          trackEvent: function() {
-            return this.eventTracked = true;
-          }
+        it("unbinds from all observed objects binded with #bindTo", function() {
+          var div, view;
+          div = document.createElement('div');
+          view = createView({}, {
+            eventTracked: false,
+            initialize: function() {
+              return this.bindTo(div, 'click', 'trackEvent');
+            },
+            trackEvent: function() {
+              return this.eventTracked = true;
+            }
+          });
+          view[methodName]();
+          $(div).trigger('click');
+          return view.eventTracked.should.be["false"];
         });
-        view.remove();
-        $(div).trigger('click');
-        return view.eventTracked.should.be["false"];
-      });
-      return it("unbinds from all observed elements binded with #bindTo", function() {
-        var object, view;
-        object = new TestObject;
-        view = createView({
-          object: object
-        }, {
-          eventTracked: false,
-          initialize: function() {
-            return this.bindTo(object, 'event', 'trackEvent');
-          },
-          trackEvent: function() {
-            return this.eventTracked = true;
-          }
+        return it("unbinds from all observed elements binded with #bindTo", function() {
+          var object, view;
+          object = new TestObject;
+          view = createView({
+            object: object
+          }, {
+            eventTracked: false,
+            initialize: function() {
+              return this.bindTo(object, 'event', 'trackEvent');
+            },
+            trackEvent: function() {
+              return this.eventTracked = true;
+            }
+          });
+          view[methodName]();
+          object.trigger('event');
+          return view.eventTracked.should.not.be["true"];
         });
-        view.remove();
-        object.trigger('event');
-        return view.eventTracked.should.not.be["true"];
       });
     });
     return describe(".noConflict", function() {
