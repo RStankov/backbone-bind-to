@@ -135,6 +135,16 @@ describe "Backbone.BindTo", ->
           initialize: -> @bindTo @options.object, 'event', 'action'
       ).should.throw 'action is not a function'
 
+    it "accepts raw function", ->
+      object = new TestObject
+      view   = createView {object},
+        eventTracked: false
+        initialize: -> @bindTo @options.object, 'event', => @eventTracked = true
+
+      object.trigger 'event'
+
+      view.eventTracked.should.not.be.false
+
   describe "#remove", ->
     it "unbinds from all model events when the view is removed", ->
       model = new TestModel

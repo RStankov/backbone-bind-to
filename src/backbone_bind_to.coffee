@@ -17,10 +17,12 @@ class BindToView extends BackboneView
     @bindTo @collection, eventName, methodName for eventName, methodName of @bindToCollection if @collection
 
   bindTo: (object, eventName, methodName) ->
-    throw new Error "Method #{methodName} does not exists" unless @[methodName]
-    throw new Error "#{methodName} is not a function" unless typeof @[methodName] is 'function'
+    callback = if typeof methodName is 'function' then methodName else @[methodName]
 
-    @listenTo object, eventName, @[methodName]
+    throw new Error "Method #{methodName} does not exists" unless callback
+    throw new Error "#{methodName} is not a function" unless typeof callback is 'function'
+
+    @listenTo object, eventName, callback
 
   remove: ->
     @model.off null, null, @ if @model

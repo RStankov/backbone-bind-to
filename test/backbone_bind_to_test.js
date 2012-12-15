@@ -206,7 +206,7 @@
           });
         }).should["throw"]('Method invalid$Action does not exist');
       });
-      return it("throws an error if view action is not an function", function() {
+      it("throws an error if view action is not an function", function() {
         return (function() {
           var object;
           object = new TestObject;
@@ -219,6 +219,23 @@
             }
           });
         }).should["throw"]('action is not a function');
+      });
+      return it("accepts raw function", function() {
+        var object, view;
+        object = new TestObject;
+        view = createView({
+          object: object
+        }, {
+          eventTracked: false,
+          initialize: function() {
+            var _this = this;
+            return this.bindTo(this.options.object, 'event', function() {
+              return _this.eventTracked = true;
+            });
+          }
+        });
+        object.trigger('event');
+        return view.eventTracked.should.not.be["false"];
       });
     });
     describe("#remove", function() {
