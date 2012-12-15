@@ -220,7 +220,7 @@
           });
         }).should["throw"]('action is not a function');
       });
-      return it("accepts raw function", function() {
+      it("accepts raw function", function() {
         var object, view;
         object = new TestObject;
         view = createView({
@@ -235,6 +235,21 @@
           }
         });
         object.trigger('event');
+        return view.eventTracked.should.not.be["false"];
+      });
+      return it("can work with dom objects", function() {
+        var div, view;
+        div = document.createElement('div');
+        view = createView({}, {
+          eventTracked: false,
+          initialize: function() {
+            return this.bindTo(div, 'click', 'trackEvent');
+          },
+          trackEvent: function() {
+            return this.eventTracked = true;
+          }
+        });
+        $(div).trigger('click');
         return view.eventTracked.should.not.be["false"];
       });
     });
@@ -275,7 +290,23 @@
         collection.trigger('event');
         return view.eventTracked.should.not.be["true"];
       });
-      return it("unbinds from all observed objects binded with #bindTo", function() {
+      it("unbinds from all observed objects binded with #bindTo", function() {
+        var div, view;
+        div = document.createElement('div');
+        view = createView({}, {
+          eventTracked: false,
+          initialize: function() {
+            return this.bindTo(div, 'click', 'trackEvent');
+          },
+          trackEvent: function() {
+            return this.eventTracked = true;
+          }
+        });
+        view.remove();
+        $(div).trigger('click');
+        return view.eventTracked.should.be["false"];
+      });
+      return it("unbinds from all observed elements binded with #bindTo", function() {
         var object, view;
         object = new TestObject;
         view = createView({

@@ -91,6 +91,17 @@ window.CommentView = Backbone.View.extend({
 });
 ```
 
+DOM/jQuery elements are also supported:
+
+```javascript
+window.CommentView = Backbone.View.extend({
+  initialize: function() {
+    this.bindTo(window, 'click', windowClicked)
+  },
+  windowClicked: function() { /* ... code ... */ }
+});
+```
+
 #### Remove
 
 Backbone.BindTo automatically ```unbinds``` from all model and collection events when the view element is removed via ```Backbone.View#remove```. Also unbinds from all events binded via ```#bindTo```.

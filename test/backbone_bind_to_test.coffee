@@ -145,6 +145,18 @@ describe "Backbone.BindTo", ->
 
       view.eventTracked.should.not.be.false
 
+    it "can work with dom objects", ->
+      div  = document.createElement 'div'
+      view = createView {},
+        eventTracked: false
+        initialize: -> @bindTo div, 'click', 'trackEvent'
+        trackEvent: -> @eventTracked = true
+
+      $(div).trigger 'click'
+
+      view.eventTracked.should.not.be.false
+
+
   describe "#remove", ->
     it "unbinds from all model events when the view is removed", ->
       model = new TestModel
@@ -173,6 +185,19 @@ describe "Backbone.BindTo", ->
       view.eventTracked.should.not.be.true
 
     it "unbinds from all observed objects binded with #bindTo", ->
+      div  = document.createElement 'div'
+      view = createView {},
+        eventTracked: false
+        initialize: -> @bindTo div, 'click', 'trackEvent'
+        trackEvent: -> @eventTracked = true
+
+      view.remove()
+
+      $(div).trigger 'click'
+
+      view.eventTracked.should.be.false
+
+    it "unbinds from all observed elements binded with #bindTo", ->
       object = new TestObject
       view   = createView {object},
         eventTracked: false

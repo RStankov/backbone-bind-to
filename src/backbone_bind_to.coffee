@@ -22,16 +22,24 @@ class BindToView extends BackboneView
     throw new Error "Method #{methodName} does not exists" unless callback
     throw new Error "#{methodName} is not a function" unless typeof callback is 'function'
 
-    @listenTo object, eventName, callback
+    if object.on is Backbone.Events.on
+      @listenTo object, eventName, callback
+    else
+      @_binded ?= []
+      @_binded.push object
+      Backbone.$(object).on "#{eventName}.bindToEvent", _.bind(callback, this)
 
   remove: ->
     @model.off null, null, @ if @model
     @collection.off null, null, @ if @collection
 
+    Backbone.$(element).off '.bindToEvent' for element in @_binded if @_binded
+    delete @_binded
+
     super
 
 Backbone.BindTo =
-  VERSION: '1.0.1'
+  VERSION: '1.1.0'
 
   noConflict: ->
     root.Backbone.View = BackboneView
