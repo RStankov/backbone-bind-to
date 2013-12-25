@@ -14,5 +14,12 @@
     "event",
     "binding"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jquery": "1.7.2",
+    "chai": "0.5.3",
+    "mocha": "1.0.1",
+    "underscore": "1.3.3",
+    "backbone": "1.0.0"
+  }
 }
