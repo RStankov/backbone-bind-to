@@ -1,0 +1,25 @@
+{
+  "name": "Backbone.BindTo",
+  "version": "1.1.0",
+  "homepage": "https://github.com/RStankov/backbone-bind-to",
+  "authors": [
+    "Radoslav Stankov <rstankov@gmail.com>"
+  ],
+  "description": "Backbone.js extension for automatic binding and unbinding of model events to views.",
+  "main": "lib/backbone_bind_to.js",
+  "keywords": [
+    "backbone",
+    "bind",
+    "views",
+    "event",
+    "binding"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "jquery": "1.7.2",
+    "chai": "0.5.3",
+    "mocha": "1.0.1",
+    "underscore": "1.3.3",
+    "backbone": "1.0.0"
+  }
+}

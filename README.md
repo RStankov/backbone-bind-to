@@ -126,7 +126,9 @@ Backbone.js - 0.9.2+
 
 ### Running the tests
 
-Just open - ```test/runner.html```
+Install bower developer dependencies - ```bower install```.
+
+Just open - ```test/runner.html```.
 
 ### Contributing
 
