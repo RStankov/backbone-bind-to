@@ -116,7 +116,12 @@ window.BindToView = Backbone.BindTo.noConflict()
 
 ### Installing
 
-Just copy ```lib/backone_bind_to.js``` into your project. Or if you are using [CoffeeScript](http://http://coffeescript.org/) you can use directly - ```src/backbone_bind_to.coffee```.
+You can get `Backbone.BindTo` in several ways:
+
+* copy `lib/backone_bind_to.js` into your project
+* copy `src/backbone_bind_to.coffee` into your project if you are using [CoffeeScript](http://http://coffeescript.org/)
+* via [Bower](http://bower.io/) - `bower install Backbone.BindTo` from your console
+* adding `Backbone.BindTo` as your [bower](http://bower.io/) dependency
 
 ### Requirements
 
