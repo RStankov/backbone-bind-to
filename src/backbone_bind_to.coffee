@@ -6,7 +6,11 @@
  Licensed under the MIT License.
 ###
 
-Backbone = window.Backbone
+if typeof require isnt 'undefined'
+  Backbone = require 'backbone'
+else
+  Backbone = window.Backbone
+
 BackboneView = Backbone.View
 
 class BindToView extends BackboneView
@@ -56,3 +60,7 @@ Backbone.BindTo =
   View: BindToView
 
 Backbone.View = Backbone.BindTo.View
+
+
+root = (exports ? this)
+root.Backbone = Backbone
