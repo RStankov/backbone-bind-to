@@ -120,8 +120,8 @@ You can get `Backbone.BindTo` in several ways:
 
 * copy `lib/backone_bind_to.js` into your project
 * copy `src/backbone_bind_to.coffee` into your project if you are using [CoffeeScript](http://http://coffeescript.org/)
-* via [Bower](http://bower.io/) - `bower install Backbone.BindTo` from your console
-* adding `Backbone.BindTo` as your [bower](http://bower.io/) dependency
+* via [Bower](http://bower.io/) - `bower install Backbone.BindTo`
+* via [npm](https://www.npmjs.com/) - `npm install backbone-bind-to`
 
 ### Requirements
 
