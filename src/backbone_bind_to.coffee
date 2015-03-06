@@ -6,8 +6,12 @@
  Licensed under the MIT License.
 ###
 
-root = @
-BackboneView = root.Backbone.View
+if typeof require isnt 'undefined'
+  Backbone = require 'backbone'
+else
+  Backbone = window.Backbone
+
+BackboneView = Backbone.View
 
 class BindToView extends BackboneView
   constructor: ->
@@ -50,9 +54,13 @@ Backbone.BindTo =
   VERSION: '1.1.0'
 
   noConflict: ->
-    root.Backbone.View = BackboneView
+    Backbone.View = BackboneView
     BindToView
 
   View: BindToView
 
-root.Backbone.View = Backbone.BindTo.View
+Backbone.View = Backbone.BindTo.View
+
+
+root = (exports ? this)
+root.Backbone = Backbone
